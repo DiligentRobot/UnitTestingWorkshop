@@ -29,6 +29,7 @@ public class NetworkThing {
             
             if let error = error {
                 completion(nil, error)
+                return
             }
             
             guard let result = result else {

@@ -58,4 +58,31 @@ class NetworkThingTests: XCTestCase {
         wait(for: [testExpectation], timeout: 1)
     }
     
+    func testMethodThatCallsTheNetworkWithNetworkError() {
+        
+        enum NetworkTestError: Error {
+            case error
+        }
+        
+        class MockNetworkProvider: NetworkProvider {
+            func getStringFromNetwork(withString: String, completion: @escaping (String?, Error?) -> ()) {
+                DispatchQueue.global().async {
+                    completion(nil, NetworkTestError.error)
+                }
+            }
+        }
+        
+        let networkThing = NetworkThing(networkProvider: MockNetworkProvider())
+        let testExpectation = expectation(description: #function)
+        
+        let testString = "Test String"
+        networkThing.methodThatCallsTheNetwork(withString: testString) { (result, error) in
+            XCTAssertNotNil(error)
+            XCTAssertNil(result)
+            testExpectation.fulfill()
+        }
+        
+        wait(for: [testExpectation], timeout: 1)
+    }
+    
 }

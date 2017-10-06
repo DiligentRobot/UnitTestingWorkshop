@@ -57,7 +57,7 @@ class StorageControllerTests: XCTestCase {
         }
     }
     
-    func testFetchPeople() {
+    func testFetchPeopleWithExisitingDataFile() {
         
         // We need a test file
         let fileURL = generateFileURL()
@@ -68,6 +68,20 @@ class StorageControllerTests: XCTestCase {
         
         // Need better test that people are valid this is just to show the point.
         XCTAssertEqual(people.count, 4)
+    }
+    
+    func testFetchPeopleCreatesDemoDataIfNoFile() {
+        
+        // We need a test file
+        let fileURL = generateFileURL()
+        let storageController = StorageController(peopleFileURL: fileURL)
+        
+        let people = storageController.fetchPeople()
+        
+        // Need better test that people are valid this is just to show the point.
+        XCTAssertEqual(people.count, 50)
+        
+        self.removeFileAtURL(fileURL: fileURL)
     }
     
 }
